@@ -20,7 +20,7 @@ The aim of the project is to build a DRF(Django Rest Framework) client order ser
 <p><b>Github</b></p>
 <ul>
 <li> Download the Zip file from the code tab on github to get the project Zip files (Recommended)</li>
-<li> Clone the project using 'git clone https://github.com/andreindeche/clientorder.git'.</li>
+<li> Clone the project using 'git clone https://github.com/andreindeche/clientorderservice.git'.</li>
 <li> Unzip the file and add the Project folder to your IDE/Compiler</li>
 </ul>
 
