@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: django-config
+data:
+  DATABASE_URL: "postgres://andrew:Postpone24*@localhost:5432/clientorder"
+  DEBUG: "False"
+  SECRET_KEY: "django-insecure-wzjo&69p#or@8!@1y89(4pukz+_3&a)lc&iqfgkr13!9j-6=c-"
+  ALLOWED_HOSTS: ["localhost", "127.0.0.1"]
