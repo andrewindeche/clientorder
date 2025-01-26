@@ -1,22 +1,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: django-deployment
+  name: django-app
 spec:
-  replicas: 3  
+  replicas: 3
   selector:
     matchLabels:
-      app: django
+      app: django-app
   template:
     metadata:
       labels:
-        app: django
+        app: django-app
     spec:
       containers:
-        - name: django
-          image: andrewin25/django-k8s:latest 
-          ports:
-            - containerPort: 8000
-          env:
-            - name: DATABASE_URL
-              value: "postgres://username:password@hostname:port/dbname"
+      - name: django
+        image: andrewin25/django-k8s:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: django-config
+              key: DATABASE_URL
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: django-config
+              key: DEBUG
+        - name: SECRET_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: django-config
+              key: SECRET_KEY
+        - name: ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              name: django-config
+              key: ALLOWED_HOSTS
