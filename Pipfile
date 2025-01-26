@@ -8,6 +8,7 @@ django = "*"
 djangorestframework = "*"
 psycopg = "*"
 python-dotenv = "*"
+africastalking = "*"
 
 [dev-packages]
 
