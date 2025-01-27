@@ -12,6 +12,7 @@ africastalking = "*"
 django-allauth = "*"
 pyjwt = "*"
 cryptography = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
