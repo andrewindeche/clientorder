@@ -82,5 +82,23 @@ python manage.py runserver
 1. Create an account on the site https://africastalking.com/sms.
 2. Generate an api key and set it on the environment variable 'YOUR_API_KEY'.
 
+<p><b>Endpoints</b></p>
+<p>Authentication</p>
+Authenticate to register as a user and interact with the API Endpoints.
+URL = 'http://localhost:8000'
+1.Login.
+http://{URL}/accounts/login/
+2.Register
+http://{URL}/accounts/signup/
+3.Password Reset
+http://{URL}//accounts/password/reset
+4.Registration Done
+http://{URL}/accounts/password/reset/done/
+5.Password Reset Confirm
+http://{URL}/accounts/password/reset/key/<uidb64>/<token>/
+6. Password Reset complete
+http://{URL}/accounts/password/reset/complete/
+
+
 ## <h1> Author </h1>
 Built by <b>Andrew Indeche</b>
