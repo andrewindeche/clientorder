@@ -65,6 +65,22 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware', 
 ]
 
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_CLIENT_ID': os.environ.get('OAUTH_CLIENT_ID'),
+        'OAUTH_CLIENT_SECRET': os.environ.get('OAUTH_CLIENT_SECRET'),
+        'REDIRECT_URI': 'http://localhost:8000/accounts/google/login/callback/',
+    }
+}
+
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
