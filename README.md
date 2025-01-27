@@ -86,18 +86,32 @@ python manage.py runserver
 <p>Authentication</p>
 Authenticate to register as a user and interact with the API Endpoints.
 URL = 'http://localhost:8000'
+
 1.Login.
-http://{URL}/accounts/login/
+http://{URL}/accounts/login/ or http://{URL}/accounts/google/login/
 2.Register
 http://{URL}/accounts/signup/
-3.Password Reset
-http://{URL}//accounts/password/reset
-4.Registration Done
-http://{URL}/accounts/password/reset/done/
-5.Password Reset Confirm
-http://{URL}/accounts/password/reset/key/<uidb64>/<token>/
-6. Password Reset complete
-http://{URL}/accounts/password/reset/complete/
+
+2.Generate Tokens for login:
+    Fields: "username", "password",
+
+    POST:/api/token/
+
+    POST:/api/token/refresh/  to refresh token
+
+    ***POST:/accounts/login/: optional will still require tokens
+
+3.Create Order
+    POST:http://{URL}/api/create_order/
+        Headers: Content-Type: application/json
+        Authorization: Add Token
+        Json payload:{
+        "customer_code": "CUST123",
+        "item": "Laptop",
+        "amount": 500
+        }
+4.Update Order
+    PUT,PATCH:http://{URL}/api/update_order/<int:pk>/
 
 
 ## <h1> Author </h1>
