@@ -16,7 +16,6 @@ def create_order(request):
 
     order = Order.objects.create(customer=customer, item=item, amount=amount)
 
-    # Send SMS alert
     send_sms_alert(customer, order, 'created')
 
     return JsonResponse({'message': 'Order created successfully'})
