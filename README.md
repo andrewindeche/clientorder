@@ -76,5 +76,10 @@ pipenv run python manage.py runserver
 python manage.py runserver
 ```
 
+<p><b>Africa's Talking</b></p>
+<p> Africa's talking has been used as the SMS/Communication gateway for the project to enable SMSes on order or update of the orders.
+1. Create an account on the site https://africastalking.com/sms.
+2. Generate an api key and set it on the environment variable 'YOUR_API_KEY'.
+
 ## <h1> Author </h1>
 Built by <b>Andrew Indeche</b>
