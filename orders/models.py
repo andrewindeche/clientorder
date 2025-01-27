@@ -6,6 +6,7 @@ class Customer(models.Model):
     code = models.CharField(max_length=50, unique=True)
     email = models.EmailField()
     registration_date = models.DateTimeField(auto_now_add=True)
+    phone = models.CharField(max_length=15,default='000-000-0000')
     
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
