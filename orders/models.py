@@ -1,12 +1,23 @@
 from django.db import models
+import uuid
 
 # Create your models here.
 class Customer(models.Model):
     name = models.CharField(max_length=100)
-    code = models.CharField(max_length=50, unique=True)
+    code = models.CharField(max_length=50, unique=True, blank=True)
     email = models.EmailField()
     registration_date = models.DateTimeField(auto_now_add=True)
-    phone = models.CharField(max_length=15,default='000-000-0000')
+    city = models.CharField(max_length=100, blank=True, null=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
+    phone = models.CharField(max_length=15,unique=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = 'CUST' + str(uuid.uuid4().int)[:6] 
+        super(Customer, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
     
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
