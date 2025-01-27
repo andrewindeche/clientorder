@@ -9,6 +9,7 @@ djangorestframework = "*"
 psycopg = "*"
 python-dotenv = "*"
 africastalking = "*"
+django-allauth = "*"
 
 [dev-packages]
 
