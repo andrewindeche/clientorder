@@ -65,6 +65,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware', 
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -76,6 +82,7 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         'OAUTH_CLIENT_ID': os.environ.get('OAUTH_CLIENT_ID'),
         'OAUTH_CLIENT_SECRET': os.environ.get('OAUTH_CLIENT_SECRET'),
+        'OAUTH_PKCE_ENABLED': True,
         'REDIRECT_URI': 'http://localhost:8000/accounts/google/login/callback/',
     }
 }
@@ -106,7 +113,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'clientorderservice.wsgi.application'
 
-LOGIN_REDIRECT_URL = '/'  # Redirect to home page after login
+LOGIN_REDIRECT_URL = '/' 
+LOGOUT_REDIRECT_URL = '/'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
