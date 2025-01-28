@@ -1,16 +1,14 @@
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import redirect
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
-from django.shortcuts import render, redirect
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import Order, Customer
 from .serializers import OrderSerializer
 from .utils import send_sms_alert
-from django.contrib.auth import login
 from .forms import CustomUserCreationForm
 
 # Create your views here.
@@ -21,6 +19,9 @@ def create_order(request):
     customer = get_object_or_404(Customer, code=customer_code)
     item = request.data.get('item')
     amount = request.data.get('amount')
+    
+    if not item or not amount:
+        return JsonResponse({'error': 'Item and amount are required fields'}, status=400)
 
     order = Order.objects.create(customer=customer, item=item, amount=amount)
 
@@ -28,15 +29,16 @@ def create_order(request):
 
     return JsonResponse({'message': 'Order created successfully'})
 
-class UpdateOrderView(generics.UpdateAPIView):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated]
+@permission_classes([IsAuthenticated])
+class UpdateOrderView(APIView):
+    def put(self, request, order_id):
+        order = get_object_or_404(Order, order_id=order_id)
 
-    def perform_update(self, serializer):
-        order = serializer.save()
-        customer = order.customer
-        send_sms_alert(customer, order, 'updated')
+        order.item = request.data.get('item', order.item)
+        order.amount = request.data.get('amount', order.amount)
+        order.save()
+
+        return Response({'message': 'Order updated successfully'})
 
 @login_required
 def view_customer_code(request):
@@ -69,8 +71,6 @@ def signup_view(request):
             return redirect('account_page')
     else:
         form = CustomUserCreationForm()
-
-    print(form)
     return render(request, 'signup.html', {'form': form})
     
 @login_required
@@ -80,10 +80,11 @@ def account_page(request):
     
     if request.method == 'POST':
         phone = request.POST.get('phone')
-        customer.phone = phone
-        customer.save()
-        phone_updated = True
-        return redirect('account_page')
+        if phone and phone != customer.phone:
+            customer.phone = phone
+            customer.save()
+            phone_updated = True
+            return redirect('account_page')
 
     context = {
         'customer_code': customer.code,
