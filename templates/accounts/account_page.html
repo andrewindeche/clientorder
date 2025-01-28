@@ -18,7 +18,21 @@
             <p>No customer code available.</p>
         {% endif %}
 
-        <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+        <h3>Update Phone Number</h3>
+        <form method="POST" action="{% url 'update_phone' %}">
+            {% csrf_token %}
+            <label for="phone">Phone Number:</label>
+            <input type="text" id="phone" name="phone" value="{{ customer.phone }}" placeholder="Enter your phone number" required>
+            <button type="submit">Update</button>
+        </form>
+
+        {% if phone_updated %}
+            <p>Your phone number is: <strong>{{ customer.phone }}</strong></p>
+        {% endif %}
+
+        <div class="exit-button">
+            <a href="http://127.0.0.1:8000/accounts/google/login/" class="btn-exit">Exit</a>
+        </div>
     </div>
 </body>
 </html>
