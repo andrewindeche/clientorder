@@ -32,6 +32,7 @@ DEBUG = os.environ.get('DEBUG') == 'True'
 
 ALLOWED_HOSTS = ['localhost','127.0.0.1' ]
 
+AFRICASTALKING_USERNAME = os.getenv('AFRICASTALKING_USERNAME')
 AFRICASTALKING_API_KEY = os.getenv('AFRICASTALKING_API_KEY')
 
 # Application definition
