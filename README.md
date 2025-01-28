@@ -92,14 +92,17 @@ http://{URL}/accounts/login/ or http://{URL}/accounts/google/login/
 2.Register
 http://{URL}/accounts/signup/
 
+3.Logout
+navigate to:
+http://{URL}/accounts/google/login/
+Select Logout
+
 2.Generate Tokens for login:
     Fields: "username", "password",
 
     POST:/api/token/
 
     POST:/api/token/refresh/  to refresh token
-
-    ***POST:/accounts/login/: optional will still require tokens
 
 3.Create Order
     POST:http://{URL}/api/create_order/
