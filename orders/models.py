@@ -4,7 +4,7 @@ import uuid
 
 # Create your models here.
 class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True) 
+    user = models.OneToOneField(User, on_delete=models.CASCADE,  unique=True, null=True, blank=True) 
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=50, unique=True, blank=True)
     email = models.EmailField()
