@@ -4,7 +4,7 @@ from .models import Customer, Order, OrderItem
 # Register your models here.
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'email', 'registration_date')
+    list_display = ('name', 'code','phone','email', 'registration_date')
     search_fields = ('name', 'code', 'email')
 
 @admin.register(Order)
