@@ -83,6 +83,8 @@ python manage.py runserver
 2. Generate an api key and set it on the environment variable 'YOUR_API_KEY'.
 
 <p><b>Endpoints</b></p>
+Use POSTMAN or any API tool to test the endpoints after login.
+Orders can only be made by authenticated users.
 <p>Authentication</p>
 Authenticate to register as a user and interact with the API Endpoints.
 URL = 'http://localhost:8000'
@@ -91,20 +93,20 @@ URL = 'http://localhost:8000'
 http://{URL}/accounts/login/ or http://{URL}/accounts/google/login/
 2.Register
 http://{URL}/accounts/signup/
-
-3.Logout
+3.View Customer code:
+http://{URL}/accounts/account_page/
+4.Logout
 navigate to:
 http://{URL}/accounts/google/login/
 Select Logout
-
-2.Generate Tokens for login:
+5.Generate Tokens for transactions:
     Fields: "username", "password",
 
     POST:/api/token/
 
     POST:/api/token/refresh/  to refresh token
 
-3.Create Order
+6.Create Order
     POST:http://{URL}/api/create_order/
         Headers: Content-Type: application/json
         Authorization: Add Token
@@ -113,7 +115,7 @@ Select Logout
         "item": "Laptop",
         "amount": 500
         }
-4.Update Order
+7.Update Order
     PUT,PATCH:http://{URL}/api/update_order/<int:pk>/
 
 
