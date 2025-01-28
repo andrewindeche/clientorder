@@ -77,6 +77,12 @@ pipenv run python manage.py runserver
 python manage.py runserver
 ```
 
+8. To Run Tests: 
+
+```bash
+python manage.py test
+```
+
 <p><b>Africa's Talking</b></p>
 <p> Africa's talking has been used as the SMS/Communication gateway for the project to enable SMSes on order or update of the orders.
 1. Create an account on the site https://africastalking.com/sms.
