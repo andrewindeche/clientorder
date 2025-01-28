@@ -121,7 +121,7 @@ Select Logout
         }
 7.Update Order
     PUT,PATCH:http://{URL}/api/update_order/<uuid:order_id>/
-    To get UUID via ORM :
+    To get UUID via Python shell for ORM :
     <ul>
     <li>python3 manage.py shell</li>
     <li>from orders.models import Order
@@ -129,7 +129,6 @@ Select Logout
         print(order.order_id)  # This will print the UUID
                                 or
         SELECT order_id FROM orders;
-
     </li>
     </ul>
 
