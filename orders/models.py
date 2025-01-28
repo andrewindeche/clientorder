@@ -29,6 +29,10 @@ class Order(models.Model):
     status = models.CharField(max_length=50, default='pending')
     payment_method = models.CharField(max_length=50)
     notes = models.TextField(blank=True, null=True)
+    order_id = models.UUIDField(default=uuid.uuid4,unique=True, editable=False)
+    
+    def __str__(self):
+        return f"Order {self.order_id}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
