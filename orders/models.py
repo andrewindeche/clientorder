@@ -1,15 +1,17 @@
 from django.db import models
+from django.contrib.auth.models import User
 import uuid
 
 # Create your models here.
 class Customer(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True) 
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=50, unique=True, blank=True)
     email = models.EmailField()
     registration_date = models.DateTimeField(auto_now_add=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
-    phone = models.CharField(max_length=15,unique=True)
+    phone = models.CharField(max_length=15, unique=True, null=True, blank=True)
     
     def save(self, *args, **kwargs):
         if not self.code:
