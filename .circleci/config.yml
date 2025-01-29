@@ -15,8 +15,6 @@ jobs:
       DATABASE_USER: $DATABASE_USER
       DATABASE_PASSWORD: $DATABASE_PASSWORD
       SECRET_KEY: $SECRET_KEY
-      DATABASE_HOST: 127.0.0.1
-      DATABASE_PORT: 5432
     steps:
       - checkout
       - run:
