@@ -1,0 +1,42 @@
+- name: Set up Django application on localhost
+  hosts: local
+  become: yes
+  tasks:
+    - name: Install system dependencies (python3, pip3, etc.)
+      apt:
+        name:
+          - python3
+          - python3-pip
+          - python3-dev
+        state: present
+
+    - name: Install pipenv
+      pip:
+        name: pipenv
+        executable: pip3
+
+    - name: Clone Django app from GitHub
+      git:
+        repo: 'https://github.com/andrewindeche/clientorderservice.git'
+        dest: '/opt/clientorderservice'
+        version: 'main'
+
+    - name: Install dependencies using pipenv
+      command:
+        cmd: pipenv install --dev
+        chdir: /opt/clientorderservice
+
+    - name: Apply migrations
+      command:
+        cmd: pipenv run python manage.py migrate
+        chdir: /opt/clientorderservice
+
+    - name: Collect static files
+      command:
+        cmd: pipenv run python manage.py collectstatic --noinput
+        chdir: /opt/clientorderservice
+
+    - name: Start the Django development server
+      command:
+        cmd: pipenv run python manage.py runserver 0.0.0.0:8000
+        chdir: /opt/clientorderservice
