@@ -4,23 +4,27 @@ jobs:
   test:
     docker:
          - image: cimg/python:3.10.14
+          environment:
+          SECRET_KEY:
+    working_directory: ~/workspace
+    
+jobs:
+  build:
+    executor: python-executor
     steps:
-      - checkout
-      - run:
-          name: Install pipenv
-          command: pip install pipenv
+      - checkout 
       - run:
           name: Install dependencies
-          command: pipenv install --dev --deploy
+          command: pip install -r requirements.txt
       - run:
-          name: Run Django migrations
-          command: pipenv run python manage.py migrate
+          name: Run Django Migrations
+          command: python manage.py migrate
       - run:
           name: Run tests
-          command: pipenv run python manage.py test
+          command: python manage.py test
 
 workflows:
   version: 2
-  test:
+  build:
     jobs:
-      - test
+      - build
