@@ -21,8 +21,11 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from django.contrib.auth import views as auth_views
+from orders import views 
+from django.shortcuts import redirect
 
 urlpatterns = [
+    path('', lambda request: redirect('accounts/google/login/', permanent=True)),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('orders.urls')),

@@ -7,8 +7,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Order, Customer
 from .utils import send_sms_alert
+from django.urls import reverse
+from . import views
 
 # Create your views here.
+def redirect_to_google_login(request):
+    return redirect(reverse('socialaccount_login', kwargs={'provider': 'google'}))
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_order(request):
