@@ -137,6 +137,9 @@ Select Logout
         SELECT order_id FROM orders;
     </li>
     </ul>
+## <h1> Terraform </h1>
+Terraform has been used and configurations set for [Render](https://render.com/)
+The configurations located are in: [text](terraform/main.tf).
 
 ## <h1> Author </h1>
 Built by <b>Andrew Indeche</b>
