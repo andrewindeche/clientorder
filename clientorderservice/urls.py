@@ -23,10 +23,13 @@ from rest_framework_simplejwt.views import (
 from django.contrib.auth import views as auth_views
 from orders import views 
 from django.shortcuts import redirect
+from graphene_django.views import GraphQLView 
+from django.views.decorators.csrf import csrf_exempt 
 
 urlpatterns = [
     path('', lambda request: redirect('accounts/google/login/', permanent=True)),
     path('admin/', admin.site.urls),
+    path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('orders.urls')),
     path('api/', include('orders.urls')),

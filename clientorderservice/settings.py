@@ -38,6 +38,7 @@ AFRICASTALKING_API_KEY = os.getenv('AFRICASTALKING_API_KEY')
 # Application definition
 
 INSTALLED_APPS = [
+    'graphene_django',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -111,6 +112,11 @@ TEMPLATES = [
         },
     },
 ]
+
+GRAPHENE = {
+    'SCHEMA': 'clientorderservice.graphql_schema.schema',
+}
+
 
 WSGI_APPLICATION = 'clientorderservice.wsgi.application'
 
