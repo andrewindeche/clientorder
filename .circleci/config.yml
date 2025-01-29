@@ -21,7 +21,7 @@ jobs:
       - checkout
       - run:
           name: Wait for DB
-          command: dockerize -wait tcp://postgres:5432 -timeout 1m 
+          command: dockerize -wait tcp://postgres:5432 -timeout 3m 
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "requirements.txt" }}
