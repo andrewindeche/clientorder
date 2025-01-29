@@ -8,7 +8,7 @@ jobs:
         environment:
           POSTGRES_USER: circleci
           POSTGRES_PASSWORD: $DATABASE_PASSWORD
-          POSTGRES_DB: $DATABASE_NAME
+          POSTGRES_DB: clientorder
           SECRET_KEY: $SECRET_KEY
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
