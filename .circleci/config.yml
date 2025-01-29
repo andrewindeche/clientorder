@@ -16,7 +16,7 @@ jobs:
           command: pip install -r requirements.txt
       - run:
           name: Wait for PostgreSQL to be ready
-          command: ./wait-for-it.sh postgres:5432 --timeout=60 --strict -- echo "PostgreSQL is up"
+          command: ./scripts/wait-for-it.sh postgres:5432 --timeout=60 --strict -- echo "PostgreSQL is up"
       - run:
           name: Run Django Migrations
           command: python manage.py migrate
