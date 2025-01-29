@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="account-container">
+        <h2>Welcome, {{ user.username }}</h2>
+
+        {% if customer_code %}
+            <p>Your Customer Code: <strong>{{ customer_code }}</strong></p>
+        {% else %}
+            <p>No customer code available.</p>
+        {% endif %}
+
+        <h3>Update Phone Number</h3>
+        <form method="POST" action="{% url 'update_phone' %}">
+            {% csrf_token %}
+            <label for="phone">Phone Number:</label>
+            <input type="text" id="phone" name="phone" value="{{ customer.phone }}" placeholder="Enter your phone number" required>
+            <button type="submit">Update</button>
+        </form>
+
+        {% if phone_updated %}
+            <p>Your phone number has been updated successfully!</p>
+        {% endif %}
+
+        <p>Your Customer Contacts: <strong>{{ customer.phone }}</strong></p>
+
+        <div class="exit-button">
+            <a href="http://127.0.0.1:8000/accounts/google/login/" class="btn-exit">Exit</a>
+        </div>
+    </div>
+</body>
+</html>

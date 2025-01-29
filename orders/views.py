@@ -1,0 +1,80 @@
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import Order, Customer
+from .utils import send_sms_alert
+
+# Create your views here.
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_order(request):
+    customer_code = request.data.get('customer_code')
+    customer = get_object_or_404(Customer, code=customer_code)
+    item = request.data.get('item')
+    amount = request.data.get('amount')
+    
+    if not item or not amount:
+        return JsonResponse({'error': 'Item and amount are required fields'}, status=400)
+
+    order = Order.objects.create(customer=customer, item=item, amount=amount)
+
+    send_sms_alert(customer, order, 'created')
+
+    return JsonResponse({'message': 'Order created successfully'})
+
+@permission_classes([IsAuthenticated])
+class UpdateOrderView(APIView):
+    def put(self, request, order_id):
+        order = get_object_or_404(Order, order_id=order_id)
+
+        order.item = request.data.get('item', order.item)
+        order.amount = request.data.get('amount', order.amount)
+        order.save()
+
+        return Response({'message': 'Order updated successfully'}, status=200)
+
+@login_required
+def view_customer_code(request):
+    user = request.user
+    try:
+        customer = Customer.objects.get(user=user)
+        return JsonResponse({'customer_code': customer.code})
+    except Customer.DoesNotExist:
+        return JsonResponse({'error': 'Customer does not exist'}, status=404)
+    
+@login_required
+def account_page(request):
+    customer = Customer.objects.get(user=request.user)
+    phone_updated = False
+    
+    if request.method == 'POST':
+        phone = request.POST.get('phone')
+        if phone and phone != customer.phone:
+            customer.phone = phone
+            customer.save()
+            phone_updated = True
+            return redirect('account_page')
+
+    context = {
+        'customer_code': customer.code,
+        'customer': customer,
+        'phone_updated': phone_updated,
+    }
+    return render(request, 'accounts/account_page.html', context)
+
+@login_required
+def update_phone(request):
+    customer = request.user.customer
+    
+    if request.method == 'POST':
+        phone = request.POST.get('phone')
+        if phone:
+            customer.phone = phone
+            customer.save()
+            return redirect('account_page')
+    
+    return render(request, 'accounts/account-page.html', {'customer': customer})
