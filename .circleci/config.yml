@@ -1,19 +1,23 @@
 version: 2.1
 
-executors:
-  python-executor:
-    docker:
-      - image: cimg/python:3.10.14
-    working_directory: ~/workspace
-
 jobs:
   build:
-    executor: python-executor
+    docker:
+      - image: cimg/python:3.10.14
+    services:
+      - postgres
+    environment:
+      DATABASE_NAME: $DATABASE_NAME
+      DATABASE_USER: $DATABASE_USER
+      DATABASE_PASSWORD: $DATABASE_PASSWORD
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: pip install -r requirements.txt
+      - run:
+          name: Wait for PostgreSQL to be ready
+          command: ./wait-for-it.sh postgres:5432 --timeout=60 --strict -- echo "PostgreSQL is up"
       - run:
           name: Run Django Migrations
           command: python manage.py migrate
@@ -21,8 +25,12 @@ jobs:
           name: Run tests
           command: python manage.py test
 
-workflows:
-  version: 2
-  build:
-    jobs:
-      - build
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: $DATABASE_NAME
+      POSTGRES_USER: $DATABASE_USER
+      POSTGRES_PASSWORD: $DATABASE_PASSWORD
+    ports:
+      - "5432:5432"
