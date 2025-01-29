@@ -77,6 +77,12 @@ pipenv run python manage.py runserver
 python manage.py runserver
 ```
 
+8. To Run Tests: 
+
+```bash
+python manage.py test
+```
+
 <p><b>Africa's Talking</b></p>
 <p> Africa's talking has been used as the SMS/Communication gateway for the project to enable SMSes on order or update of the orders.
 1. Create an account on the site https://africastalking.com/sms.
@@ -87,18 +93,22 @@ Use POSTMAN or any API tool to test the endpoints after login.
 Orders can only be made by authenticated users.
 <p>Authentication</p>
 Authenticate to register as a user and interact with the API Endpoints.
+For logins, click on the link and authenticate on a browser.
 URL = 'http://localhost:8000'
 
 1.Login.
 http://{URL}/accounts/login/ or http://{URL}/accounts/google/login/
 2.Register
 http://{URL}/accounts/signup/
+
 3.View Customer code:
 http://{URL}/accounts/account_page/
+
 4.Logout
 navigate to:
 http://{URL}/accounts/google/login/
 Select Logout
+
 5.Generate Tokens for transactions:
     Fields: "username", "password",
 
@@ -110,14 +120,23 @@ Select Logout
     POST:http://{URL}/api/create_order/
         Headers: Content-Type: application/json
         Authorization: Add Token
-        Json payload:{
+        Example:Json payload:{
         "customer_code": "CUST123",
         "item": "Laptop",
         "amount": 500
         }
 7.Update Order
-    PUT,PATCH:http://{URL}/api/update_order/<int:pk>/
-
+    PUT,PATCH:http://{URL}/api/update_order/<uuid:order_id>/
+    To get UUID via Python shell for ORM :
+    <ul>
+    <li>python3 manage.py shell</li>
+    <li>from orders.models import Order
+        order = Order.objects.first()  # Or use a filter to get a specific order
+        print(order.order_id)  # This will print the UUID
+                                or
+        SELECT order_id FROM orders;
+    </li>
+    </ul>
 
 ## <h1> Author </h1>
 Built by <b>Andrew Indeche</b>
