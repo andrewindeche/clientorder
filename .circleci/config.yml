@@ -4,12 +4,11 @@ jobs:
   build:
     docker:
       - image: cimg/python:3.10.14
-    services:
-      - postgres
     environment:
       DATABASE_NAME: $DATABASE_NAME
       DATABASE_USER: $DATABASE_USER
       DATABASE_PASSWORD: $DATABASE_PASSWORD
+      SECRET_KEY: $SECRET_KEY
     steps:
       - checkout
       - run:
