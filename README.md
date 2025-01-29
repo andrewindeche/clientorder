@@ -89,34 +89,52 @@ python manage.py test
 2. Generate an api key and set it on the environment variable 'YOUR_API_KEY'.
 
 <p><b>Endpoints</b></p>
-Use POSTMAN or any API tool to test the endpoints after login.
-Orders can only be made by authenticated users.
-<p>Authentication</p>
-Authenticate to register as a user and interact with the API Endpoints.
-For logins, click on the link and authenticate on a browser.
+<ul>
+<li>Use POSTMAN or any API tool to test the endpoints after login.</li>
+<li>Orders can only be made by authenticated users.</li>
+</ul>
+
+<p><b>Authentication</b></p>
+<ul>
+<li>Authenticate to register as a user and interact with the API Endpoints.</li>
+<li>For logins, click on the link and authenticate on a browser.</li>
 URL = 'http://localhost:8000'
+</ul>
 
 1.Login.
+
+```bash
 http://{URL}/accounts/login/ or http://{URL}/accounts/google/login/
+```
+
 2.Register
+
+```bash
 http://{URL}/accounts/signup/
+```
 
 3.View Customer code:
+```bash
 http://{URL}/accounts/account_page/
+```
 
-4.Logout
-navigate to:
+4.Logout navigate to:
+```bash
 http://{URL}/accounts/google/login/
+```
 Select Logout
 
 5.Generate Tokens for transactions:
-    Fields: "username", "password",
+    <ul>
+   <li> Fields: "username", "password",</li>
 
-    POST:/api/token/
+    <li>  POST:/api/token/ </li>
 
-    POST:/api/token/refresh/  to refresh token
+     <li> POST:/api/token/refresh/  to refresh token </li>
+    </ul>
 
 6.Create Order
+```bash
     POST:http://{URL}/api/create_order/
         Headers: Content-Type: application/json
         Authorization: Add Token
@@ -125,6 +143,8 @@ Select Logout
         "item": "Laptop",
         "amount": 500
         }
+```
+
 7.Update Order
     PUT,PATCH:http://{URL}/api/update_order/<uuid:order_id>/
     To get UUID via Python shell for ORM :
@@ -151,6 +171,7 @@ ansible-playbook -i hosts.ini local_tasks.yml
 ```
 
 To run as a sudo or admin user:
+
 ```bash
 ansible-playbook playbook.yml --ask-become-pass
 ```
