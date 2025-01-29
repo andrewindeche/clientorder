@@ -15,13 +15,13 @@ jobs:
       DATABASE_USER: $DATABASE_USER
       DATABASE_PASSWORD: $DATABASE_PASSWORD
       SECRET_KEY: $SECRET_KEY
-      DATABASE_HOST: $DATABASE_HOST
-      DATABASE_PORT: $DATABASE_PORT
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
     steps:
       - checkout
       - run:
           name: Wait for DB
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+          command: dockerize -wait tcp://postgres:5432 -timeout 1m 
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "requirements.txt" }}
