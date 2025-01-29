@@ -15,21 +15,13 @@ jobs:
       DATABASE_USER: $DATABASE_USER
       DATABASE_PASSWORD: $DATABASE_PASSWORD
       SECRET_KEY: $SECRET_KEY
-      DATABASE_HOST: postgres
-      DATABASE_PORT: 5432
+      DATABASE_HOST: $DATABASE_HOST
+      DATABASE_PORT: $DATABASE_PORT
     steps:
       - checkout
       - run:
-          name: Install dockerize
-          command: apk add --no-cache dockerize
-      - run:
           name: Wait for DB
-          command: dockerize -wait tcp://postgres:5432 -timeout 1m
-      - run:
-          name: Create PostgreSQL Role and Database
-          command: |
-            docker exec postgres psql -U circleci -c "CREATE USER $DATABASE_USER WITH PASSWORD '$DATABASE_PASSWORD';"
-            docker exec postgres psql -U circleci -c "CREATE DATABASE $DATABASE_NAME OWNER $DATABASE_USER;"
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "requirements.txt" }}
