@@ -176,6 +176,49 @@ Select Logout
         SELECT order_id FROM orders;
     </li>
     </ul>
+
+8. Use GraphQl for querying:
+    Navigate to: http://127.0.0.1:8000/graphql/
+
+    <p><b>GraphQl Mutations:</p>/<b>
+
+    Generate Token.
+    ```bash
+    mutation {
+    generateToken(username: "your_username", password: "your_password") {
+    access
+    refresh
+    }
+    }
+    ```
+
+    <p><b>Refresh Token.</p>/<b>
+    ```bash
+    mutation {
+    refreshToken(refresh: "your_refresh_token") {
+    access
+    }
+    }
+    ```
+
+    <p><b>Create Order</p>/<b>
+    ```bash
+        mutation {
+    createOrder(customerCode: "CUST123", item: "Laptop", amount: 500) {
+        message
+    }
+    }
+    ```
+
+    <p><b>Update Order</p>/<b>
+    ```bash
+        mutation {
+    updateOrder(orderId: "your_order_uuid", item: "New Item", amount: 600) {
+        message
+    }
+    }
+    ```
+    
 ## <h1> Terraform </h1>
 Terraform has been used and configurations set for [Render](https://render.com/)
 The configurations located are in: [text](terraform/main.tf).
