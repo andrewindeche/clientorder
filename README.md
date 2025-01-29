@@ -141,5 +141,18 @@ Select Logout
 Terraform has been used and configurations set for [Render](https://render.com/)
 The configurations located are in: [text](terraform/main.tf).
 
+## <h1> Ansible </h1>
+The Ansible playbook has been written for consistent installations across local environments and can be used to configure various local machines
+
+Use this command to tun a playbook:
+
+```bash
+ansible-playbook -i hosts.ini local_tasks.yml
+```
+
+To run as a sudo or admin user:
+```bash
+ansible-playbook playbook.yml --ask-become-pass
+```
 ## <h1> Author </h1>
 Built by <b>Andrew Indeche</b>
