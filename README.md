@@ -21,13 +21,32 @@ The aim of the project is to build a DRF(Django Rest Framework) client order ser
 <p><b>Github</b></p>
 <ul>
 <li> Download the Zip file from the code tab on github to get the project Zip files (Recommended)</li>
-<li> Clone the project using 'git clone https://github.com/andreindeche/clientorderservice.git'.</li>
+<li> Clone the project using ```bash git clone https://github.com/andreindeche/clientorderservice.git'.```</li>
 <li> Unzip the file and add the Project folder to your IDE/Compiler</li>
 </ul>
 
 1. Create an .env environment on the Django root folder and add the recessary environment variables. 
 Use <b>env.example</b> as a guide for environment variables.
 
+<p><b>Kubernetes</b></p>
+<ul>
+<li>Create a Docker Image</li>
+
+```bash
+docker build -t your-django-app 
+```
+
+2.Create a configmap.yaml
+3.Apply kubernetes config for kubernetes cluster
+
+```bash
+kubectl apply -f configmap.yaml
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+```
+
+<li></li>
+</ul>
 <p><b>Django</b></p>
 <p>The project uses pipenv, django and postgresql backend</p>
 
