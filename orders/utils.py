@@ -15,5 +15,8 @@ def send_sms_alert(customer, order, action='placed'):
         response = sms.send(message, [recipient])
         print(f"SMS sent successfully to {recipient}")
         print(f"Response: {response}")
+        return response
     except Exception as e:
-        print(f"Error sending SMS: {e}")
+        error_message = f"Error sending SMS: {e}"
+        print(error_message)
+        return {'error': error_message}

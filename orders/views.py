@@ -27,9 +27,22 @@ def create_order(request):
 
     order = Order.objects.create(customer=customer, item=item, amount=amount)
 
-    send_sms_alert(customer, order, 'created')
+    sms_response = send_sms_alert(customer, order, 'created')
 
-    return JsonResponse({'message': 'Order created successfully'})
+    if isinstance(sms_response, dict) and 'error' in sms_response:
+        return JsonResponse({
+            'message': 'Order created successfully, but SMS failed.',
+            'sms_error': sms_response['error']
+        })
+
+    sms_message = sms_response.get('SMSMessageData', {}).get('Message', 'No SMS response')
+    sms_status = sms_response.get('SMSMessageData', {}).get('Recipients', [{}])[0].get('status', 'No status')
+
+    return JsonResponse({
+        'message': 'Order created successfully',
+        'sms_message': sms_message,
+        'sms_status': sms_status,
+    })
 
 @permission_classes([IsAuthenticated])
 class UpdateOrderView(APIView):
