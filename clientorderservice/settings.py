@@ -38,6 +38,7 @@ AFRICASTALKING_API_KEY = os.getenv('AFRICASTALKING_API_KEY')
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework.authtoken',
     'graphene_django',
     'django.contrib.admin',
     'django.contrib.auth',
