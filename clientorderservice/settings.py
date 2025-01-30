@@ -93,6 +93,7 @@ SOCIALACCOUNT_PROVIDERS = {
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
+    'graphql_jwt.backends.JSONWebTokenBackend',
 )
 
 ROOT_URLCONF = 'clientorderservice.urls'
@@ -115,6 +116,9 @@ TEMPLATES = [
 
 GRAPHENE = {
     'SCHEMA': 'clientorderservice.graphql_schema.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
 }
 
 
@@ -183,6 +187,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+BASE_URL = 'http://localhost:8000'
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_HOST = 'smtp.gmail.com'
 #EMAIL_PORT = 587
