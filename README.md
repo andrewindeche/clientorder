@@ -173,7 +173,7 @@ Select Logout
 ```
 
 7.Update Order
-   <p> PUT,PATCH:http://{URL}/api/update_order/<uuid:order_id>/</p>
+   <p> PUT:http://{URL}/api/update_order/<uuid:order_id>/</p>
     To get UUID via Python shell for ORM :
 <ul>
 ```bash
