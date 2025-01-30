@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'False'
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1' ]
+ALLOWED_HOSTS = ['localhost','127.0.0.1','minikube_ip']
 
 AFRICASTALKING_USERNAME = os.getenv('AFRICASTALKING_USERNAME')
 AFRICASTALKING_API_KEY = os.getenv('AFRICASTALKING_API_KEY')
