@@ -29,7 +29,7 @@ from django.contrib.auth.decorators import login_required
 urlpatterns = [
     path('', lambda request: redirect('accounts/google/login/', permanent=True)),
     path('admin/', admin.site.urls),
-     path('graphql/', login_required(GraphQLView.as_view(graphiql=True)), name="graphql"),
+    path('graphql/', login_required(GraphQLView.as_view(graphiql=True)), name="graphql"),
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('orders.urls')),
     path('api/', include('orders.urls')),
