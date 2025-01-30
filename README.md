@@ -29,82 +29,73 @@ The aim of the project is to build a DRF(Django Rest Framework) client order ser
 Use <b>[env example](./env.example)</b> as a guide for environment variables.
 
 <p><b>Kubernetes</b></p>
-Create a Docker Image
-
-bash
-docker build -t your-django-app .
-Create a configmap.yaml for environment variables
-
+<ul>
+<li>Create a Docker Image</li>
+    ```bash
+     docker build -t your-django-app .
+    ```
+<li> Create a configmap.yaml for environment variables</li>
 Make sure to define your environment variables in this file.
 
-Apply Kubernetes configuration for your Kubernetes cluster
+<li>Apply Kubernetes configuration for your Kubernetes cluster</li>
 
-bash
-kubectl apply -f configmap.yaml
-kubectl apply -f deployment.yaml
-kubectl apply -f service.yaml
+    ```bash
+    kubectl apply -f configmap.yaml
+    kubectl apply -f deployment.yaml
+    kubectl apply -f service.yaml
+    ```
 
-If you're testing locally, you can use Minikube to create a local Kubernetes cluster
+<li>If you're testing locally, you can use Minikube to create a local Kubernetes cluster</li>
+    ```bash
+    minikube start
+    ```
 
-```bash
-minikube start
-```
-
-```bash
-explorer.exe "http://192.168.39.84:30095"
-```
+    ```bash
+    explorer.exe "http://192.168.39.84:30095"
+    ```
+</ul>
 
 <p><b>Django</b></p>
 <p>The project uses pipenv, django and postgresql backend</p>
 
 1. Install pipenv using the command 
-
 ```bash
 pip install pipenv
 ```
 
 2. Activate your virtual enviromnment
-
 ```bash
 pipenv shell 
 ```
 
 3. Naviagte to your Django project and use  in  the directory path: <b>[requirements](./requirements.txt)</b> to install the required django dependencies 
-
 ```bash
 pipenv install -r requirements.txt
 ```
 
 4. Create an .env on the Django root folder and add the recessary environment variables. 
-
 Use [example env](backend\env.example) as a guide for environment variables </li>
 
 5. Create a Super User using 
-
 ```bash
 python manage.py createsuperuser
 ```
 
 6. Migrate your DB using 
-
 ```bash
 python manage.py migrate
 ```
 
 7. To run the project outside of a shell environment use: 
-
 ```bash
 pipenv run python manage.py runserver
 ```
-
  or while in the shell environment use:
-
 ```bash
 python manage.py runserver
 ```
 
 8. To Run Tests: 
-
 ```bash
 python manage.py test
 ```
@@ -128,13 +119,11 @@ URL = 'http://localhost:8000'
 </ul>
 
 1.Login.
-
 ```bash
 http://{URL}/accounts/login/ or http://{URL}/accounts/google/login/
 ```
 
 2.Register
-
 ```bash
 http://{URL}/accounts/signup/
 ```
@@ -172,24 +161,28 @@ Select Logout
 ```
 
 7.Update Order
-    PUT,PATCH:http://{URL}/api/update_order/<uuid:order_id>/
+   <p> PUT,PATCH:http://{URL}/api/update_order/<uuid:order_id>/</p>
     To get UUID via Python shell for ORM :
-    <ul>
-    <li>python3 manage.py shell</li>
-    <li>from orders.models import Order
-        order = Order.objects.first()  # Or use a filter to get a specific order
-        print(order.order_id)  # This will print the UUID
-                                or
-        SELECT order_id FROM orders;
-    </li>
-    </ul>
+<ul>
+```bash
+<li>python3 manage.py shell</li>
+```
+```bash
+<li>from orders.models import Order
+    order = Order.objects.first()  # Or use a filter to get a specific order
+    print(order.order_id)  # This will print the UUID
+                            or
+    SELECT order_id FROM orders;
+</li>
+    ```
+</ul>
 
 8. Use GraphQl for querying:
     Navigate to: http://127.0.0.1:8000/graphql/
 
-    <p><b>GraphQl Mutations:</p>/<b>
+<p><b>GraphQl Mutations:</p>/<b>
 
-    Generate Token.
+Generate Token.
     ```bash
     mutation {
     generateToken(username: "your_username", password: "your_password") {
@@ -199,45 +192,41 @@ Select Logout
     }
     ```
 
-    <p><b>Refresh Token.</p>/<b>
-    ```bash
-        mutation {
-    refreshToken(refresh: "your_refresh_token") {
-    access
-        }
-    }
-    ```
+<p><b>Refresh Token.</p>/<b>
 
-    <p><b>Create Order</p>/<b>
-    ```bash
-            mutation {
-        createOrder(input: {
-            customerCode: "CUST123",
-            item: "Laptop",
-            amount: 500.0
-        }) {
-            order {
-                id
-                customer {
-                    code
-                }
-                item
-                amount
+    mutation {
+refreshToken(refresh: "your_refresh_token") {
+access
+    }
+}
+
+
+<p><b>Create Order</p>/<b>
+        mutation {
+    createOrder(input: {
+        customerCode: "CUST123",
+        item: "Laptop",
+        amount: 500.0
+    }) {
+        order {
+            id
+            customer {
+                code
             }
-            message
+            item
+            amount
         }
-    }
-
-    ```
-
-    <p><b>Update Order</p>/<b>
-    ```bash
-        mutation {
-    updateOrder(orderId: "your_order_uuid", item: "New Item", amount: 600) {
         message
     }
-    }
-    ```
+}
+
+<p><b>Update Order</p>/<b>
+
+    mutation {
+updateOrder(orderId: "your_order_uuid", item: "New Item", amount: 600) {
+    message
+}
+}
 
 ## <h1> Terraform </h1>
 Terraform has been used and configurations set for [Render](https://render.com/)
