@@ -95,7 +95,7 @@ pipenv run python manage.py runserver
 python manage.py runserver
 ```
 
-8. To Run Tests: 
+8. To Run Tests (Tests include Security Tests): 
 ```bash
 python manage.py test
 ```
