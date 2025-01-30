@@ -100,6 +100,18 @@ python manage.py runserver
 python manage.py test
 ```
 
+9.Generate Coverage report
+
+```bash
+coverage run --source='.' manage.py test
+```
+```bash
+coverage report
+```
+```bash
+coverage html
+```
+
 <p><b>Africa's Talking</b></p>
 <p> Africa's talking has been used as the SMS/Communication gateway for the project to enable SMSes on order or update of the orders.
 1. Create an account on the site https://africastalking.com/sms.
