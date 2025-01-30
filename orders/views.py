@@ -80,6 +80,9 @@ def update_phone(request):
         if phone:
             customer.phone = phone
             customer.save()
-            return redirect('account_page')
+            return render(request, 'accounts/account_page.html', {
+                'customer': customer,
+                'message': 'Phone number updated successfully.'
+            })
     
-    return render(request, 'accounts/account-page.html', {'customer': customer})
+    return render(request, 'accounts/account_page.html', {'customer': customer})
