@@ -26,11 +26,12 @@ The aim of the project is to build a DRF(Django Rest Framework) client order ser
 </ul>
 
 1. Create an .env environment on the Django root folder and add the recessary environment variables. 
-Use <b>[env example](./env.example)</b> as a guide for environment variables.
+<p>Use <b>[env example](./env.example)</b> as a guide for environment variables.</p>
 
 <p><b>Kubernetes</b></p>
 <ul>
 <li>Create a Docker Image</li>
+
     ```bash
      docker build -t your-django-app .
     ```
@@ -46,6 +47,7 @@ Make sure to define your environment variables in this file.
     ```
 
 <li>If you're testing locally, you can use Minikube to create a local Kubernetes cluster</li>
+
     ```bash
     minikube start
     ```
@@ -187,10 +189,10 @@ To get UUID via Python shell for ORM :
     print(order.order_id)
 ```
     or start psql:
+
 ```bash
     SELECT order_id FROM orders;
 ```
-
 
 8. Use GraphQl for querying:
     Navigate to: http://127.0.0.1:8000/graphql/
@@ -201,73 +203,75 @@ Generate Token.
 
 ```bash
 
-    mutation {
-    generateToken(username: "your_username", password: "your_password") {
+mutation {
+  generateToken(username: "your_username", password: "your_password") {
     access
     refresh
-    }
-    }
+  }
+}
+
 
 ```
 
 <p><b>Refresh Token.</p>/<b>
 
 ```bash
-
-    mutation {
-refreshToken(refresh: "your_refresh_token") {
-access
-    }
+mutation {
+  refreshToken(refresh: "your_refresh_token") {
+    access
+  }
 }
+
 ```
 
 <p><b>Create Order</p>/<b>
 
 ```bash
 
-        mutation {
-    createOrder(input: {
-        customerCode: "CUST123",
-        item: "Laptop",
-        amount: 500.0
-    }) {
-        order {
-            id
-            customer {
-                code
-            }
-            item
-            amount
-        }
-        message
+mutation {
+  createOrder(input: {
+    customerCode: "CUST123",
+    item: "Laptop",
+    amount: 500.0
+  }) {
+    order {
+      id
+      customer {
+        code
+      }
+      item
+      amount
     }
+    message
+  }
 }
 
 ```
+
 <p><b>Update Order</p>/<b>
 
 ```bash
-    mutation {
-updateOrder(orderId: "your_order_uuid", item: "New Item", amount: 600) {
-    message
-}
+mutation {
+    updateOrder(orderId: "your_order_uuid", item: "New Item", amount: 600) {
+        message
+  }
 }
 ```
 
 ## <h1> Terraform </h1>
-Terraform has been used and configurations set for [Render](https://render.com/)
-The configurations located are in: [text](terraform/main.tf).
+<p>Terraform has been used and configurations set for [Render](https://render.com/)</p>
+<p>The configurations located are in: [text](terraform/main.tf).</p>
 
 ## <h1> Ansible </h1>
-The Ansible playbook has been written for consistent installations across local environments and can be used to configure various local machines
+<p>The Ansible playbook has been written for consistent installations across local environments and can be used to configure various local machines</p>
 
-Use this command to tun a playbook:
+<p>Use this command to tun a playbook:</p>
 
 ```bash
 ansible-playbook -i hosts.ini local_tasks.yml
 ```
 
-To run as a sudo or admin user:
+<p>To run as a sudo or admin user:</p>
 
 ```bash
 ansible-playbook playbook.yml --ask-become-pass
