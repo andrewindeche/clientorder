@@ -173,21 +173,24 @@ Select Logout
 ```
 
 7.Update Order
-   <p> PUT:http://{URL}/api/update_order/<uuid:order_id>/</p>
-    To get UUID via Python shell for ORM :
-<ul>
 ```bash
-<li>python3 manage.py shell</li>
+   PUT:http://{URL}/api/update_order/<uuid:order_id>/</p>
+```
+To get UUID via Python shell for ORM :
+
+```bash
+    python3 manage.py shell
 ```
 ```bash
-<li>from orders.models import Order
-    order = Order.objects.first()  # Or use a filter to get a specific order
-    print(order.order_id)  # This will print the UUID
-                            or
+    from orders.models import Order
+    order = Order.objects.first() 
+    print(order.order_id)
+```
+    or start psql:
+```bash
     SELECT order_id FROM orders;
-</li>
-    ```
-</ul>
+```
+
 
 8. Use GraphQl for querying:
     Navigate to: http://127.0.0.1:8000/graphql/
@@ -195,25 +198,33 @@ Select Logout
 <p><b>GraphQl Mutations:</p>/<b>
 
 Generate Token.
-    ```bash
+
+```bash
+
     mutation {
     generateToken(username: "your_username", password: "your_password") {
     access
     refresh
     }
     }
-    ```
+
+```
 
 <p><b>Refresh Token.</p>/<b>
+
+```bash
 
     mutation {
 refreshToken(refresh: "your_refresh_token") {
 access
     }
 }
-
+```
 
 <p><b>Create Order</p>/<b>
+
+```bash
+
         mutation {
     createOrder(input: {
         customerCode: "CUST123",
@@ -232,13 +243,16 @@ access
     }
 }
 
+```
 <p><b>Update Order</p>/<b>
 
+```bash
     mutation {
 updateOrder(orderId: "your_order_uuid", item: "New Item", amount: 600) {
     message
 }
 }
+```
 
 ## <h1> Terraform </h1>
 Terraform has been used and configurations set for [Render](https://render.com/)
