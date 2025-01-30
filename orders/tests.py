@@ -1,11 +1,10 @@
-from django.db import IntegrityError
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.authtoken.models import Token
 from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Customer, Order
 import uuid
-from django.middleware.csrf import get_token
+from django.test import TestCase
 from unittest.mock import patch
 
 class AccountTests(APITestCase):
@@ -65,19 +64,16 @@ class OrderTests(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_create_order(self):
-        response = self.client.get(reverse('create_order'))
-        self.assertEqual(response.status_code, 200)
-        csrf_token = get_token(response.wsgi_request)
-        headers = {'HTTP_AUTHORIZATION': f'Token {self.token.key}'}
         self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
-
-        response = self.client.post(reverse('create_order'), {
+        
+        data = {
             'customer_code': 'CUST216202',
             'item': 'Laptop',
-            'amount': '500',
-            'csrfmiddlewaretoken': csrf_token
-        }, **headers)
-        self.assertEqual(response.status_code, 302)
+            'amount': '500'
+        }
+        response = self.client.post(reverse('create_order'), data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json().get('message'), 'Order created successfully')
 
 class UpdateOrderTests(APITestCase):
 
@@ -106,28 +102,19 @@ class UpdateOrderTests(APITestCase):
 def generate_unique_code():
     return 'CUST' + str(uuid.uuid4()).replace('-', '')[:8]
 
-class UpdatePhoneTests(APITestCase):
+class UpdatePhoneTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create(username='testuser', password='12345')
-        if not self.user.is_staff and not self.user.is_superuser:
-            try:
-                code = generate_unique_code()
-                self.customer, created = Customer.objects.get_or_create(
-                    user=self.user, defaults={'code': code, 'phone': '+2547942346284'}
-                )
-                if not created:
-                    self.customer.code = code
-                    self.customer.phone = '+2547942346284'
-                    self.customer.save()
-            except IntegrityError:
-                print("An error occurred while creating or updating the customer.")
-        else:
-            print("User is an admin and cannot be converted to a customer.")
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.customer, created = Customer.objects.get_or_create(
+            user=self.user, defaults={'code': 'some_unique_code', 'phone': '+2547942346284'}
+        )
 
     def test_update_phone(self):
+        self.client.force_login(self.user)
         response = self.client.post(reverse('update_phone'), {
             'phone': '+254794000000'
         })
+
         self.assertEqual(response.status_code, 200)
         self.customer.refresh_from_db()
         self.assertEqual(self.customer.phone, '+254794000000')
