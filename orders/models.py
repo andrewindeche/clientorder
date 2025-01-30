@@ -4,7 +4,7 @@ import uuid
 
 # Create your models here.
 class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,  unique=True, null=True, blank=True) 
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=50, unique=True, blank=True)
     email = models.EmailField()
@@ -29,10 +29,10 @@ class Order(models.Model):
     status = models.CharField(max_length=50, default='pending')
     payment_method = models.CharField(max_length=50)
     notes = models.TextField(blank=True, null=True)
-    order_id = models.UUIDField(default=uuid.uuid4,unique=True, editable=False)
+    order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     
-    def __str__(self):
-        return f"Order {self.order_id}"
+    class Meta:
+        pass
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
