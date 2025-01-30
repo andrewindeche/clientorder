@@ -56,21 +56,19 @@ class OrderTests(APITestCase):
         User.objects.all().delete()
 
         self.user = User.objects.create_user(username='testuser2', password='MyStrongP@ssw0rd2!')
-        self.customer, created = Customer.objects.get_or_create(user=self.user, defaults={'code': 'CUST216201'})
+        self.customer, _ = Customer.objects.get_or_create(user=self.user, defaults={'code': 'CUST216201'})
 
         self.token, _ = Token.objects.get_or_create(user=self.user)
-
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
     def test_create_order(self):
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
-        
         data = {
             'customer_code': 'CUST216202',
             'item': 'Laptop',
-            'amount': '500'
+            'amount': 500
         }
+
         response = self.client.post(reverse('create_order'), data, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json().get('message'), 'Order created successfully')
@@ -88,16 +86,20 @@ class UpdateOrderTests(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_update_order(self):
-        headers = {'HTTP_AUTHORIZATION': f'Token {self.token.key}'}
-        response = self.client.put(reverse('update_order', args=[str(self.order.order_id)]), {
-            'item': 'Tablet',
-            'amount': '400'
-        }, content_type='application/json', **headers)
+        order = Order.objects.create(customer=self.customer, item='Old Item', amount=100)
+        data = {
+            'item': 'New Laptop',
+            'amount': 500
+        }
+        
+        order_uuid = order.order_id 
+        url = reverse('update_order', kwargs={'order_id': order_uuid})
+        
+        response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, 200)
-
-        self.order.refresh_from_db()
-        self.assertEqual(self.order.item, 'Tablet')
-        self.assertEqual(self.order.amount, 400)
+        order.refresh_from_db()
+        self.assertEqual(order.item, 'New Laptop')
+        self.assertEqual(order.amount, 500)
 
 def generate_unique_code():
     return 'CUST' + str(uuid.uuid4()).replace('-', '')[:8]
@@ -105,7 +107,7 @@ def generate_unique_code():
 class UpdatePhoneTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='12345')
-        self.customer, created = Customer.objects.get_or_create(
+        self.customer, _ = Customer.objects.get_or_create(
             user=self.user, defaults={'code': 'some_unique_code', 'phone': '+2547942346284'}
         )
 
@@ -122,3 +124,42 @@ class UpdatePhoneTests(TestCase):
     def tearDown(self):
         User.objects.all().delete()
         Customer.objects.all().delete()
+
+"""
+class SecurityTests(TestCase):
+    def test_authorized_user_access(self):
+        response = self.client.get(reverse('secure_endpoint'))
+        self.assertEqual(response.status_code, 403) 
+
+        self.client.login(username='authorized_user', password='password')
+        response = self.client.get(reverse('secure_endpoint'))
+        self.assertEqual(response.status_code, 200)  
+    
+    def test_sql_injection(self):
+        malicious_input = "'; DROP TABLE orders; --"
+        response = self.client.post(reverse('create_order'), {'item': malicious_input})
+        self.assertNotEqual(response.status_code, 500) 
+
+    def test_password_encryption(self):
+        user = User.objects.create_user(username='user', password='password')
+        self.assertNotEqual(user.password, 'password') 
+
+    def test_logout(self):
+        self.client.login(username='user', password='password')
+        response = self.client.get(reverse('protected_view'))
+        self.assertEqual(response.status_code, 200)
+        
+        self.client.logout()
+        response = self.client.get(reverse('protected_view'))
+        self.assertEqual(response.status_code, 403)
+        
+    def test_xss_protection(self):
+        malicious_script = "<script>alert('XSS');</script>"
+        response = self.client.post(reverse('comment'), {'text': malicious_script})
+        self.assertNotIn(malicious_script, response.content.decode())
+        
+    def test_csrf_protection(self):
+        response = self.client.post(reverse('secure_action'), {'data': 'test'})
+        self.assertEqual(response.status_code, 403) 
+"""
+
