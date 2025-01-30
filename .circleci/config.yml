@@ -11,6 +11,8 @@ jobs:
           POSTGRES_DB: clientorder
           SECRET_KEY: $SECRET_KEY
           POSTGRES_HOST_AUTH_METHOD: trust
+          AFRICASTALKING_USERNAME: $AFRICASTALKING_USERNAME
+          AFRICASTALKING_API_KEY: $AFRICASTALKING_API_KEY
     steps:
       - checkout
       - run:
