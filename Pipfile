@@ -13,6 +13,7 @@ django-allauth = "*"
 pyjwt = "*"
 cryptography = "*"
 djangorestframework-simplejwt = "*"
+django-graphql-jwt = "*"
 
 [dev-packages]
 
