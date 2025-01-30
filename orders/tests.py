@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from .models import Customer, Order
 import uuid
 from django.test import TestCase
-from unittest.mock import patch
+from django.test import Client
 
 class AccountTests(APITestCase):
     def setUp(self):
@@ -51,20 +51,19 @@ class AccountTests(APITestCase):
 class OrderTests(APITestCase):
 
     def setUp(self):
-        Order.objects.all().delete()
-        Customer.objects.all().delete()
-        User.objects.all().delete()
-
-        self.user = User.objects.create_user(username='testuser2', password='MyStrongP@ssw0rd2!')
-        self.customer, _ = Customer.objects.get_or_create(user=self.user, defaults={'code': 'CUST216201'})
-
-        self.token, _ = Token.objects.get_or_create(user=self.user)
+        self.user = User.objects.create_user(username='testuser3', password='MyStrongP@ssw0rd3!')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
+        
+        self.customer, created = Customer.objects.get_or_create(user=self.user, defaults={'code': 'CUST216204', 'phone': '+25470987654'})
+        self.order = Order.objects.create(order_id=uuid.uuid4(), customer=self.customer, item='Laptop', amount=500)
+
+        self.token, _ = Token.objects.get_or_create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
     def test_create_order(self):
         data = {
-            'customer_code': 'CUST216202',
+            'customer_code': 'CUST216204',
             'item': 'Laptop',
             'amount': 500
         }
@@ -125,41 +124,27 @@ class UpdatePhoneTests(TestCase):
         User.objects.all().delete()
         Customer.objects.all().delete()
 
-"""
 class SecurityTests(TestCase):
-    def test_authorized_user_access(self):
-        response = self.client.get(reverse('secure_endpoint'))
-        self.assertEqual(response.status_code, 403) 
-
-        self.client.login(username='authorized_user', password='password')
-        response = self.client.get(reverse('secure_endpoint'))
-        self.assertEqual(response.status_code, 200)  
-    
-    def test_sql_injection(self):
-        malicious_input = "'; DROP TABLE orders; --"
-        response = self.client.post(reverse('create_order'), {'item': malicious_input})
-        self.assertNotEqual(response.status_code, 500) 
-
     def test_password_encryption(self):
         user = User.objects.create_user(username='user', password='password')
         self.assertNotEqual(user.password, 'password') 
 
     def test_logout(self):
         self.client.login(username='user', password='password')
-        response = self.client.get(reverse('protected_view'))
+        response = self.client.get(reverse('account_login'))
         self.assertEqual(response.status_code, 200)
         
         self.client.logout()
-        response = self.client.get(reverse('protected_view'))
-        self.assertEqual(response.status_code, 403)
+        response = self.client.get(reverse('account_login'))
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse('account_page'))
+        self.assertRedirects(response, reverse('account_login') + '?next=' + reverse('account_page')) 
         
     def test_xss_protection(self):
         malicious_script = "<script>alert('XSS');</script>"
-        response = self.client.post(reverse('comment'), {'text': malicious_script})
+        response = self.client.post(reverse('update_phone'), {'text': malicious_script})
         self.assertNotIn(malicious_script, response.content.decode())
-        
-    def test_csrf_protection(self):
-        response = self.client.post(reverse('secure_action'), {'data': 'test'})
-        self.assertEqual(response.status_code, 403) 
-"""
 
+    def test_csrf_protection_with_missing_token(self):
+        response = self.client.post(reverse('token_obtain_pair'), {'data': 'test'})
+        self.assertEqual(response.status_code, 400)
