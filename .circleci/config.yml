@@ -1,26 +1,50 @@
 version: 2.1
 
 jobs:
-  test:
+  build:
     docker:
-         - image: cimg/python:3.10.14
+      - image: cimg/python:3.10.14
+      - image: cimg/postgres:13.3
+        environment:
+          POSTGRES_USER: circleci
+          POSTGRES_PASSWORD: $DATABASE_PASSWORD
+          POSTGRES_DB: clientorder
+          SECRET_KEY: $SECRET_KEY
+          POSTGRES_HOST_AUTH_METHOD: trust
+          AFRICASTALKING_USERNAME: $AFRICASTALKING_USERNAME
+          AFRICASTALKING_API_KEY: $AFRICASTALKING_API_KEY
     steps:
       - checkout
       - run:
-          name: Install pipenv
-          command: pip install pipenv
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 3m 
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+            - v1-dependencies-
       - run:
-          name: Install dependencies
-          command: pipenv install --dev --deploy
+          name: Install Dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
       - run:
-          name: Run Django migrations
-          command: pipenv run python manage.py migrate
+          name: Run Migrations
+          command: |
+            . venv/bin/activate
+            python manage.py migrate
       - run:
-          name: Run tests
-          command: pipenv run python manage.py test
+          name: Run Tests
+          command: |
+            . venv/bin/activate 
+            python manage.py test
 
 workflows:
   version: 2
-  test:
+  build_and_test:
     jobs:
-      - test
+      - build

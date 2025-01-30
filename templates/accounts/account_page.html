@@ -32,6 +32,10 @@
 
         <p>Your Customer Contacts: <strong>{{ customer.phone }}</strong></p>
 
+        <div class="graphql-button">
+            <a href="{% url 'graphql' %}" class="btn-graphql">Go to GraphQL</a>
+        </div>
+
         <div class="exit-button">
             <a href="http://127.0.0.1:8000/accounts/google/login/" class="btn-exit">Exit</a>
         </div>

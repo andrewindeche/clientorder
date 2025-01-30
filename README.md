@@ -21,66 +21,95 @@ The aim of the project is to build a DRF(Django Rest Framework) client order ser
 <p><b>Github</b></p>
 <ul>
 <li> Download the Zip file from the code tab on github to get the project Zip files (Recommended)</li>
-<li> Clone the project using 'git clone https://github.com/andreindeche/clientorderservice.git'.</li>
+<li> Clone the project using ```bash git clone https://github.com/andreindeche/clientorderservice.git'.```</li>
 <li> Unzip the file and add the Project folder to your IDE/Compiler</li>
 </ul>
 
 1. Create an .env environment on the Django root folder and add the recessary environment variables. 
-Use <b>env.example</b> as a guide for environment variables.
+Use <b>[env example](./env.example)</b> as a guide for environment variables.
+
+<p><b>Kubernetes</b></p>
+<ul>
+<li>Create a Docker Image</li>
+    ```bash
+     docker build -t your-django-app .
+    ```
+<li> Create a configmap.yaml for environment variables</li>
+Make sure to define your environment variables in this file.
+
+<li>Apply Kubernetes configuration for your Kubernetes cluster</li>
+
+    ```bash
+    kubectl apply -f configmap.yaml
+    kubectl apply -f deployment.yaml
+    kubectl apply -f service.yaml
+    ```
+
+<li>If you're testing locally, you can use Minikube to create a local Kubernetes cluster</li>
+    ```bash
+    minikube start
+    ```
+
+    ```bash
+    explorer.exe "http://192.168.39.84:30095"
+    ```
+</ul>
 
 <p><b>Django</b></p>
 <p>The project uses pipenv, django and postgresql backend</p>
 
 1. Install pipenv using the command 
-
 ```bash
 pip install pipenv
 ```
 
 2. Activate your virtual enviromnment
-
 ```bash
 pipenv shell 
 ```
 
-3. Naviagte to your Django project and use  in  the directory path: <b>backend\requirements.txt</b> to install the required django dependencies 
-
+3. Naviagte to your Django project and use  in  the directory path: <b>[requirements](./requirements.txt)</b> to install the required django dependencies 
 ```bash
 pipenv install -r requirements.txt
 ```
 
 4. Create an .env on the Django root folder and add the recessary environment variables. 
-
-Use (backend\env.example) as a guide for environment variables </li>
+Use [example env](backend\env.example) as a guide for environment variables </li>
 
 5. Create a Super User using 
-
 ```bash
 python manage.py createsuperuser
 ```
 
 6. Migrate your DB using 
-
 ```bash
 python manage.py migrate
 ```
 
 7. To run the project outside of a shell environment use: 
-
 ```bash
 pipenv run python manage.py runserver
 ```
-
  or while in the shell environment use:
-
 ```bash
 python manage.py runserver
 ```
 
-8. To Run Tests: 
-
+8. To Run Tests (Tests include Security Tests): 
 ```bash
 python manage.py test
+```
+
+9.Generate Coverage report
+
+```bash
+coverage run --source='.' manage.py test
+```
+```bash
+coverage report
+```
+```bash
+coverage html
 ```
 
 <p><b>Africa's Talking</b></p>
@@ -89,34 +118,50 @@ python manage.py test
 2. Generate an api key and set it on the environment variable 'YOUR_API_KEY'.
 
 <p><b>Endpoints</b></p>
-Use POSTMAN or any API tool to test the endpoints after login.
-Orders can only be made by authenticated users.
-<p>Authentication</p>
-Authenticate to register as a user and interact with the API Endpoints.
-For logins, click on the link and authenticate on a browser.
+<ul>
+<li>Preferably Use POSTMAN or any API tool to test the endpoints after login.</li>
+<li>Orders can only be made by authenticated users.</li>
+</ul>
+
+<p><b>Authentication</b></p>
+<ul>
+<li>Authenticate to register as a user and interact with the API Endpoints.</li>
+<li>For logins, click on the link and authenticate on a browser.</li>
 URL = 'http://localhost:8000'
+</ul>
 
 1.Login.
+```bash
 http://{URL}/accounts/login/ or http://{URL}/accounts/google/login/
+```
+
 2.Register
+```bash
 http://{URL}/accounts/signup/
+```
 
 3.View Customer code:
+```bash
 http://{URL}/accounts/account_page/
+```
 
-4.Logout
-navigate to:
+4.Logout navigate to:
+```bash
 http://{URL}/accounts/google/login/
+```
 Select Logout
 
 5.Generate Tokens for transactions:
-    Fields: "username", "password",
+    <ul>
+   <li> Fields: "username", "password",</li>
 
-    POST:/api/token/
+    <li>  POST:/api/token/ </li>
 
-    POST:/api/token/refresh/  to refresh token
+     <li> POST:/api/token/refresh/  to refresh token </li>
+    </ul>
 
 6.Create Order
+```bash
     POST:http://{URL}/api/create_order/
         Headers: Content-Type: application/json
         Authorization: Add Token
@@ -125,18 +170,93 @@ Select Logout
         "item": "Laptop",
         "amount": 500
         }
-7.Update Order
-    PUT,PATCH:http://{URL}/api/update_order/<uuid:order_id>/
-    To get UUID via Python shell for ORM :
-    <ul>
-    <li>python3 manage.py shell</li>
-    <li>from orders.models import Order
-        order = Order.objects.first()  # Or use a filter to get a specific order
-        print(order.order_id)  # This will print the UUID
-                                or
-        SELECT order_id FROM orders;
-    </li>
-    </ul>
+```
 
+7.Update Order
+   <p> PUT:http://{URL}/api/update_order/<uuid:order_id>/</p>
+    To get UUID via Python shell for ORM :
+<ul>
+```bash
+<li>python3 manage.py shell</li>
+```
+```bash
+<li>from orders.models import Order
+    order = Order.objects.first()  # Or use a filter to get a specific order
+    print(order.order_id)  # This will print the UUID
+                            or
+    SELECT order_id FROM orders;
+</li>
+    ```
+</ul>
+
+8. Use GraphQl for querying:
+    Navigate to: http://127.0.0.1:8000/graphql/
+
+<p><b>GraphQl Mutations:</p>/<b>
+
+Generate Token.
+    ```bash
+    mutation {
+    generateToken(username: "your_username", password: "your_password") {
+    access
+    refresh
+    }
+    }
+    ```
+
+<p><b>Refresh Token.</p>/<b>
+
+    mutation {
+refreshToken(refresh: "your_refresh_token") {
+access
+    }
+}
+
+
+<p><b>Create Order</p>/<b>
+        mutation {
+    createOrder(input: {
+        customerCode: "CUST123",
+        item: "Laptop",
+        amount: 500.0
+    }) {
+        order {
+            id
+            customer {
+                code
+            }
+            item
+            amount
+        }
+        message
+    }
+}
+
+<p><b>Update Order</p>/<b>
+
+    mutation {
+updateOrder(orderId: "your_order_uuid", item: "New Item", amount: 600) {
+    message
+}
+}
+
+## <h1> Terraform </h1>
+Terraform has been used and configurations set for [Render](https://render.com/)
+The configurations located are in: [text](terraform/main.tf).
+
+## <h1> Ansible </h1>
+The Ansible playbook has been written for consistent installations across local environments and can be used to configure various local machines
+
+Use this command to tun a playbook:
+
+```bash
+ansible-playbook -i hosts.ini local_tasks.yml
+```
+
+To run as a sudo or admin user:
+
+```bash
+ansible-playbook playbook.yml --ask-become-pass
+```
 ## <h1> Author </h1>
 Built by <b>Andrew Indeche</b>

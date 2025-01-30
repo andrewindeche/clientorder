@@ -28,9 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG') == 'True'
+DEBUG = os.environ.get('DEBUG') == 'False'
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1' ]
+ALLOWED_HOSTS = ['localhost','127.0.0.1','minikube_ip']
 
 AFRICASTALKING_USERNAME = os.getenv('AFRICASTALKING_USERNAME')
 AFRICASTALKING_API_KEY = os.getenv('AFRICASTALKING_API_KEY')
@@ -38,6 +38,8 @@ AFRICASTALKING_API_KEY = os.getenv('AFRICASTALKING_API_KEY')
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework.authtoken',
+    'graphene_django',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -92,6 +94,7 @@ SOCIALACCOUNT_PROVIDERS = {
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
+    'graphql_jwt.backends.JSONWebTokenBackend',
 )
 
 ROOT_URLCONF = 'clientorderservice.urls'
@@ -111,6 +114,14 @@ TEMPLATES = [
         },
     },
 ]
+
+GRAPHENE = {
+    'SCHEMA': 'clientorderservice.graphql_schema.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
+}
+
 
 WSGI_APPLICATION = 'clientorderservice.wsgi.application'
 
@@ -177,6 +188,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+BASE_URL = 'http://localhost:8000'
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_HOST = 'smtp.gmail.com'
 #EMAIL_PORT = 587

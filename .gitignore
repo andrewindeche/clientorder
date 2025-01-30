@@ -3,3 +3,5 @@
 db.sqlite3
 .vscode/
 configmap.yaml
+.k8s
+terraform/terraform.tfvars

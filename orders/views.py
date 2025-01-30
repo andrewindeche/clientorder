@@ -7,8 +7,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Order, Customer
 from .utils import send_sms_alert
+from django.urls import reverse
+from . import views
 
 # Create your views here.
+def redirect_to_google_login(request):
+    return redirect(reverse('socialaccount_login', kwargs={'provider': 'google'}))
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_order(request):
@@ -22,9 +27,22 @@ def create_order(request):
 
     order = Order.objects.create(customer=customer, item=item, amount=amount)
 
-    send_sms_alert(customer, order, 'created')
+    sms_response = send_sms_alert(customer, order, 'created')
 
-    return JsonResponse({'message': 'Order created successfully'})
+    if isinstance(sms_response, dict) and 'error' in sms_response:
+        return JsonResponse({
+            'message': 'Order created successfully, but SMS failed.',
+            'sms_error': sms_response['error']
+        })
+
+    sms_message = sms_response.get('SMSMessageData', {}).get('Message', 'No SMS response')
+    sms_status = sms_response.get('SMSMessageData', {}).get('Recipients', [{}])[0].get('status', 'No status')
+
+    return JsonResponse({
+        'message': 'Order created successfully',
+        'sms_message': sms_message,
+        'sms_status': sms_status,
+    })
 
 @permission_classes([IsAuthenticated])
 class UpdateOrderView(APIView):
@@ -75,6 +93,9 @@ def update_phone(request):
         if phone:
             customer.phone = phone
             customer.save()
-            return redirect('account_page')
+            return render(request, 'accounts/account_page.html', {
+                'customer': customer,
+                'message': 'Phone number updated successfully.'
+            })
     
-    return render(request, 'accounts/account-page.html', {'customer': customer})
+    return render(request, 'accounts/account_page.html', {'customer': customer})

@@ -9,9 +9,8 @@ class CustomerAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('customer', 'item', 'amount', 'time', 'status', 'payment_method')
-    search_fields = ('customer__name', 'item', 'status', 'payment_method')
-    list_filter = ('status', 'payment_method')
+    list_display = ('customer', 'item', 'amount', 'time')
+    search_fields = ('customer__name', 'item')
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
