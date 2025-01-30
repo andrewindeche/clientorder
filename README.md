@@ -26,27 +26,34 @@ The aim of the project is to build a DRF(Django Rest Framework) client order ser
 </ul>
 
 1. Create an .env environment on the Django root folder and add the recessary environment variables. 
-Use <b>env.example</b> as a guide for environment variables.
+Use <b>[env example](./env.example)</b> as a guide for environment variables.
 
 <p><b>Kubernetes</b></p>
-<ul>
-<li>Create a Docker Image</li>
+Create a Docker Image
 
-```bash
-docker build -t your-django-app 
-```
+bash
+docker build -t your-django-app .
+Create a configmap.yaml for environment variables
 
-2.Create a configmap.yaml
-3.Apply kubernetes config for kubernetes cluster
+Make sure to define your environment variables in this file.
 
-```bash
+Apply Kubernetes configuration for your Kubernetes cluster
+
+bash
 kubectl apply -f configmap.yaml
 kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
+
+If you're testing locally, you can use Minikube to create a local Kubernetes cluster
+
+```bash
+minikube start
 ```
 
-<li></li>
-</ul>
+```bash
+explorer.exe "http://192.168.39.84:30095"
+```
+
 <p><b>Django</b></p>
 <p>The project uses pipenv, django and postgresql backend</p>
 
@@ -62,7 +69,7 @@ pip install pipenv
 pipenv shell 
 ```
 
-3. Naviagte to your Django project and use  in  the directory path: <b>backend\requirements.txt</b> to install the required django dependencies 
+3. Naviagte to your Django project and use  in  the directory path: <b>[requirements](./requirements.txt)</b> to install the required django dependencies 
 
 ```bash
 pipenv install -r requirements.txt
@@ -70,7 +77,7 @@ pipenv install -r requirements.txt
 
 4. Create an .env on the Django root folder and add the recessary environment variables. 
 
-Use (backend\env.example) as a guide for environment variables </li>
+Use [example env](backend\env.example) as a guide for environment variables </li>
 
 5. Create a Super User using 
 
@@ -109,7 +116,7 @@ python manage.py test
 
 <p><b>Endpoints</b></p>
 <ul>
-<li>Use POSTMAN or any API tool to test the endpoints after login.</li>
+<li>Preferably Use POSTMAN or any API tool to test the endpoints after login.</li>
 <li>Orders can only be made by authenticated users.</li>
 </ul>
 
@@ -194,20 +201,33 @@ Select Logout
 
     <p><b>Refresh Token.</p>/<b>
     ```bash
-    mutation {
+        mutation {
     refreshToken(refresh: "your_refresh_token") {
     access
-    }
+        }
     }
     ```
 
     <p><b>Create Order</p>/<b>
     ```bash
-        mutation {
-    createOrder(customerCode: "CUST123", item: "Laptop", amount: 500) {
-        message
+            mutation {
+        createOrder(input: {
+            customerCode: "CUST123",
+            item: "Laptop",
+            amount: 500.0
+        }) {
+            order {
+                id
+                customer {
+                    code
+                }
+                item
+                amount
+            }
+            message
+        }
     }
-    }
+
     ```
 
     <p><b>Update Order</p>/<b>
@@ -218,7 +238,7 @@ Select Logout
     }
     }
     ```
-    
+
 ## <h1> Terraform </h1>
 Terraform has been used and configurations set for [Render](https://render.com/)
 The configurations located are in: [text](terraform/main.tf).
