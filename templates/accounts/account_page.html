@@ -19,13 +19,15 @@
         {% endif %}
 
         <h3>Update Phone Number</h3>
-        <form method="POST" action="{% url 'update_phone' %}">
+        <form method="POST">
             {% csrf_token %}
-            <label for="phone">Phone Number:</label>
-            <input type="text" id="phone" name="phone" value="{{ customer.phone }}" placeholder="Enter your phone number" required>
-            <button type="submit">Update</button>
+            <div>
+                <label for="phone">Phone Number:</label>
+                <input type="text" name="phone" id="phone" value="{{ customer.phone|default_if_none:'' }}" placeholder="Enter your phone number" />
+            </div>
+            <button type="submit">Update Phone Number</button>
         </form>
-
+        
         {% if phone_updated %}
             <p>Your phone number has been updated successfully!</p>
         {% endif %}
