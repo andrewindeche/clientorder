@@ -33,8 +33,21 @@ The aim of the project is to build a DRF(Django Rest Framework) client order ser
 <li>Create a Docker Image</li>
 
     ```bash
-     docker build -t your-django-app .
+     docker build -t your-django-project .
     ```
+<li>Run the Docker container:</li>
+
+    ```bash
+    docker run -p 8000:8000 myproject
+    ```
+
+<li>Push image to a container registry</li>
+
+  ```bash
+  docker tag my-django-app your-username/my-django-app:latest
+  docker push your-username/my-django-app:latest
+  ```
+
 <li> Create a configmap.yaml for environment variables</li>
 Make sure to define your environment variables in this file.
 
