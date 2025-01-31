@@ -54,9 +54,18 @@ class OrderTests(APITestCase):
         self.user = User.objects.create_user(username='testuser3', password='MyStrongP@ssw0rd3!')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
+
+        self.customer, _ = Customer.objects.get_or_create(
+            user=self.user, 
+            defaults={'code': 'CUST216204', 'phone': '+25470987654'}
+        )
         
-        self.customer, created = Customer.objects.get_or_create(user=self.user, defaults={'code': 'CUST216204', 'phone': '+25470987654'})
-        self.order = Order.objects.create(order_id=uuid.uuid4(), customer=self.customer, item='Laptop', amount=500)
+        self.order = Order.objects.create(
+            order_id=uuid.uuid4(),
+            customer=self.customer,
+            item='Laptop',
+            amount=500
+        )
 
         self.token, _ = Token.objects.get_or_create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
