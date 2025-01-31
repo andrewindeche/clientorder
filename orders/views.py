@@ -67,9 +67,21 @@ def view_customer_code(request):
     
 @login_required
 def account_page(request):
-    customer = Customer.objects.get(user=request.user)
+    user = request.user
     phone_updated = False
-    
+
+    if user.is_staff:
+        return redirect('/admin/')  
+
+    try:
+        customer = Customer.objects.get(user=user)
+    except Customer.DoesNotExist:
+        customer = Customer.objects.create(
+            user=user,
+            name=user.username,
+            email=user.email
+        )
+
     if request.method == 'POST':
         phone = request.POST.get('phone')
         if phone and phone != customer.phone:
@@ -93,8 +105,6 @@ def update_phone(request):
         phone = request.POST.get('phone')
         if phone:
             customer.phone = phone
-            if not customer.code:
-                customer.code = 'CUST' + str(uuid.uuid4().int)[:6]
             customer.save()
             return render(request, 'accounts/account_page.html', {
                 'customer': customer,

@@ -32,6 +32,9 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, to_field='order_id')
-    item = models.CharField(max_length=200)
+    item = models.CharField(max_length=100)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"Item {self.item} in Order {self.order.order_id}"

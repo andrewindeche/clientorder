@@ -2,10 +2,11 @@ from django.contrib import admin
 from .models import Customer, Order, OrderItem
 
 # Register your models here.
-@admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code','phone','email', 'registration_date')
+    list_display = ('name', 'code', 'phone', 'email', 'registration_date')
     search_fields = ('name', 'code', 'email')
+    list_filter = ('registration_date',)
+    ordering = ('name',) 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
