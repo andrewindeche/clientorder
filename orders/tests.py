@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from .models import Customer, Order
 import uuid
 from django.test import TestCase
-from django.test import Client
+from unittest.mock import patch
 
 class AccountTests(APITestCase):
     def setUp(self):
@@ -49,38 +49,39 @@ class AccountTests(APITestCase):
         Customer.objects.all().delete()
 
 class OrderTests(APITestCase):
-
     def setUp(self):
         self.user = User.objects.create_user(username='testuser3', password='MyStrongP@ssw0rd3!')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
-        self.customer, _ = Customer.objects.get_or_create(
-            user=self.user, 
-            defaults={'code': 'CUST216204', 'phone': '+25470987654'}
-        )
-        
-        self.order = Order.objects.create(
-            order_id=uuid.uuid4(),
-            customer=self.customer,
-            item='Laptop',
-            amount=500
+        self.customer, created = Customer.objects.get_or_create(
+            user=self.user,
+            defaults={'phone': '+2547942346284'} 
         )
 
         self.token, _ = Token.objects.get_or_create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
-    def test_create_order(self):
+    @patch('orders.views.send_sms_alert') 
+    def test_create_order(self, mock_send_sms_alert):
+        mock_send_sms_alert.return_value = {'SMSMessageData': {'Message': 'Test SMS sent', 'Recipients': [{'status': 'Success'}]}}
+
+        customer_code = self.customer.code
         data = {
-            'customer_code': 'CUST216204',
+            'customer_code': customer_code,
             'item': 'Laptop',
             'amount': 500
         }
 
         response = self.client.post(reverse('create_order'), data, format='json')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json().get('message'), 'Order created successfully')
 
+        self.assertEqual(response.status_code, 200)
+
+        response_data = response.json()
+        self.assertEqual(response_data.get('message'), 'Order created successfully')
+        self.assertEqual(response_data.get('sms_message'), 'Test SMS sent')
+        self.assertEqual(response_data.get('sms_status'), 'Success')
+        
 class UpdateOrderTests(APITestCase):
 
     def setUp(self):
