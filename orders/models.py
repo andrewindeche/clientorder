@@ -31,7 +31,7 @@ class Order(models.Model):
         pass
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, to_field='order_id')
     item = models.CharField(max_length=200)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
