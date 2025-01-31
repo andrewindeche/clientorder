@@ -1,3 +1,4 @@
+import uuid
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db import IntegrityError
@@ -24,13 +25,15 @@ def create_or_update_customer(sender, instance, created, **kwargs):
     if not instance.is_staff and not instance.is_superuser:
         try:
             customer, created = Customer.objects.get_or_create(
-                user=instance, defaults={'code': 'CUST216204', 'phone': '+2547942346284'}
+                user=instance,
+                defaults={'code': 'CUST' + str(uuid.uuid4().int)[:6]} 
             )
+
             if not created:
-                # Update the existing customer
-                customer.code = 'CUST216204'
-                customer.phone = '+2547942346284'
+                if not customer.phone:
+                    customer.phone = ''
                 customer.save()
+
         except IntegrityError:
             print("An error occurred while creating or updating the customer.")
     else:
