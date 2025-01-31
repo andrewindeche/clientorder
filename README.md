@@ -230,12 +230,11 @@ mutation {
 
 mutation {
   createOrder(input: {
-    customerCode: "CUST123",
+    customerCode: "CUST216204",
     item: "Laptop",
     amount: 500.0
   }) {
     order {
-      id
       customer {
         code
       }
@@ -243,6 +242,8 @@ mutation {
       amount
     }
     message
+    smsMessage
+    smsStatus
   }
 }
 
