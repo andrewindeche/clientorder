@@ -98,16 +98,16 @@ class UpdateOrder(graphene.Mutation):
     class Arguments:
         order_id = graphene.UUID(required=True)
         item = graphene.String()
-        amount = graphene.Decimal()
+        amount = graphene.String() 
 
-    order = graphene.Field(lambda: OrderType)
+    order = graphene.Field(OrderType)
 
     def mutate(self, info, order_id, item=None, amount=None):
         order = Order.objects.get(order_id=order_id)
         if item:
             order.item = item
         if amount:
-            order.amount = amount
+            order.amount = Decimal(amount)
         order.save()
         return UpdateOrder(order=order)
 
