@@ -1,3 +1,4 @@
+import uuid
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.decorators import login_required
@@ -92,6 +93,8 @@ def update_phone(request):
         phone = request.POST.get('phone')
         if phone:
             customer.phone = phone
+            if not customer.code:
+                customer.code = 'CUST' + str(uuid.uuid4().int)[:6]
             customer.save()
             return render(request, 'accounts/account_page.html', {
                 'customer': customer,

@@ -1,19 +1,19 @@
 import os
 import graphene
-from orders.models import Order, Customer
 import requests
-from graphene_django import DjangoObjectType
+from orders.models import Order, Customer 
 from django.conf import settings
 from graphql_jwt.decorators import login_required
 from django.shortcuts import get_object_or_404
-from .types import OrderType
 from orders.utils import send_sms_alert 
+from decimal import Decimal
 import africastalking
+from clientorderservice.types import OrderType 
 
+# Initialize Africa's Talking
 africastalking.initialize(username=os.getenv('AFRICASTALKING_USERNAME'), 
 api_key=os.getenv('AFRICASTALKING_API_KEY'))
 sms = africastalking.SMS
-
 
 class GenerateToken(graphene.Mutation):
     access = graphene.String()
@@ -52,15 +52,6 @@ class RefreshToken(graphene.Mutation):
         else:
             raise Exception("Invalid refresh token")
 
-def send_sms_alert(customer, order, action):
-    message = f"Dear {customer.name}, your order for {order.item} has been {action}."
-    recipients = [customer.phone]
-    sms.send(message, recipients)
-
-class OrderType(DjangoObjectType):
-    class Meta:
-        model = Order
-
 class CreateOrderInput(graphene.InputObjectType):
     customer_code = graphene.String(required=True)
     item = graphene.String(required=True)
@@ -72,6 +63,8 @@ class CreateOrder(graphene.Mutation):
     
     order = graphene.Field(OrderType)
     message = graphene.String()
+    sms_message = graphene.String()
+    sms_status = graphene.String()
 
     @login_required 
     def mutate(self, info, input):
@@ -79,33 +72,42 @@ class CreateOrder(graphene.Mutation):
         customer_code = input.customer_code
         customer = get_object_or_404(Customer, code=customer_code)
         item = input.item
-        amount = input.amount
+        amount = Decimal(input.amount) 
 
         if not item or not amount:
             return CreateOrder(order=None, message='Item and amount are required fields')
 
         order = Order.objects.create(customer=customer, item=item, amount=amount)
-        send_sms_alert(customer, order, 'created')
+        sms_response = send_sms_alert(customer, order, 'created')
 
-        return CreateOrder(order=order, message='Order created successfully')
+        if sms_response is not None:
+            sms_message = sms_response.get('SMSMessageData', {}).get('Message', 'No SMS response')
+            sms_status = sms_response.get('SMSMessageData', {}).get('Recipients', [{}])[0].get('status', 'No status')
+        else:
+            sms_message = 'No SMS response'
+            sms_status = 'No status'
 
-class Mutation(graphene.ObjectType):
-    create_order = CreateOrder.Field()
-    
+        return CreateOrder(
+            order=order,
+            message='Order created successfully',
+            sms_message=sms_message,
+            sms_status=sms_status
+        )
+
 class UpdateOrder(graphene.Mutation):
     class Arguments:
         order_id = graphene.UUID(required=True)
         item = graphene.String()
-        amount = graphene.Decimal()
+        amount = graphene.String() 
 
-    order = graphene.Field(lambda: OrderType)
+    order = graphene.Field(OrderType)
 
     def mutate(self, info, order_id, item=None, amount=None):
         order = Order.objects.get(order_id=order_id)
         if item:
             order.item = item
         if amount:
-            order.amount = amount
+            order.amount = Decimal(amount)
         order.save()
         return UpdateOrder(order=order)
 
@@ -114,4 +116,3 @@ class Mutation(graphene.ObjectType):
     refresh_token = RefreshToken.Field()
     create_order = CreateOrder.Field()
     update_order = UpdateOrder.Field()
-
