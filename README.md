@@ -252,11 +252,35 @@ mutation {
 <p><b>Update Order</p>/<b>
 
 ```bash
+
 mutation {
-    updateOrder(orderId: "your_order_uuid", item: "New Item", amount: 600) {
-        message
+  updateOrder(orderId: "128a3b7f-d146-4793-a3c1-b5ee04d21316", item: "New Item Name", amount: "150.00") {
+    order {
+      customer {
+        code
+      }
+      item
+      amount
+    }
   }
 }
+
+```
+
+To get UUID via Python shell for ORM :
+
+```bash
+    python3 manage.py shell
+```
+```bash
+    from orders.models import Order
+    order = Order.objects.first() 
+    print(order.order_id)
+```
+    or start psql:
+
+```bash
+    SELECT order_id FROM orders;
 ```
 
 ## <h1> Terraform </h1>
