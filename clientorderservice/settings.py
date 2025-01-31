@@ -116,7 +116,7 @@ TEMPLATES = [
 ]
 
 GRAPHENE = {
-    'SCHEMA': 'clientorderservice.graphql_schema.schema',
+    'SCHEMA': 'clientorderservice.schema.schema',
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],
