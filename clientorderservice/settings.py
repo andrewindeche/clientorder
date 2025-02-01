@@ -32,7 +32,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'False'
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','minikube_ip','db']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','minikube_ip','db','https://clientorderservice.onrender.com']
 
 AFRICASTALKING_USERNAME = os.getenv('AFRICASTALKING_USERNAME')
 AFRICASTALKING_API_KEY = os.getenv('AFRICASTALKING_API_KEY')
@@ -74,10 +74,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-}
-
-DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL')),
 }
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -140,11 +136,12 @@ LOGOUT_REDIRECT_URL = '/accounts/google/login/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+        'DATABASE_URL': os.environ.get('DATABASE_URL'),
         'NAME': os.environ.get('DATABASE_NAME'),
         'USER': os.environ.get('DATABASE_USER'),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
-        'HOST': os.environ.get('DATABASE_HOST','127.0.0.1',),
-        'PORT': os.environ.get('DATABASE_PORT','5432'),
+        'HOST': os.environ.get('DATABASE_HOST'),
+        'PORT': os.environ.get('DATABASE_PORT'),
     }
 }
 
