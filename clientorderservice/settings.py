@@ -17,6 +17,8 @@ load_dotenv()
 
 from pathlib import Path
 
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -72,6 +74,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+}
+
+DATABASES = {
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL')),
 }
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -137,7 +143,7 @@ DATABASES = {
         'NAME': os.environ.get('DATABASE_NAME'),
         'USER': os.environ.get('DATABASE_USER'),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
-        'HOST': os.environ.get('DATABASE_HOST','db'),
+        'HOST': os.environ.get('DATABASE_HOST','127.0.0.1',),
         'PORT': os.environ.get('DATABASE_PORT','5432'),
     }
 }
