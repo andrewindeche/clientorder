@@ -88,7 +88,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_CLIENT_ID': os.environ.get('OAUTH_CLIENT_ID'),
         'OAUTH_CLIENT_SECRET': os.environ.get('OAUTH_CLIENT_SECRET'),
         'OAUTH_PKCE_ENABLED': True,
-        'REDIRECT_URI': 'http://localhost:8000/accounts/google/login/callback/',
+        'REDIRECT_URI': os.environ.get('REDIRECT_URI'),
     }
 }
 
