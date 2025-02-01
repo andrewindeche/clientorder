@@ -15,6 +15,7 @@ cryptography = "*"
 djangorestframework-simplejwt = "*"
 django-graphql-jwt = "*"
 coverage = "*"
+dj-database-url = "*"
 
 [dev-packages]
 
