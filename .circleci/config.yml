@@ -9,12 +9,10 @@ jobs:
           POSTGRES_USER: circleci
           POSTGRES_PASSWORD: $DATABASE_PASSWORD
           POSTGRES_DB: clientorder
+          SECRET_KEY: $SECRET_KEY
           POSTGRES_HOST_AUTH_METHOD: trust
-    environment:
-      SECRET_KEY: $SECRET_KEY
-      AFRICASTALKING_USERNAME: $AFRICASTALKING_USERNAME
-      AFRICASTALKING_API_KEY: $AFRICASTALKING_API_KEY
-      DATABASE_URL: postgres://circleci:$DATABASE_PASSWORD@localhost:5432/clientorder
+          AFRICASTALKING_USERNAME: $AFRICASTALKING_USERNAME
+          AFRICASTALKING_API_KEY: $AFRICASTALKING_API_KEY
     steps:
       - checkout
       - run:
