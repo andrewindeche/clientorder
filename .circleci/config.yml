@@ -60,8 +60,12 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y nodejs
       - run:
-          name: Install Render CLI
-          command: npm install -g render-cli
+          name: Configure npm global directory and install Render CLI
+          command: |
+            mkdir -p ~/.npm-global
+            npm config set prefix ~/.npm-global
+            export PATH=$PATH:~/.npm-global/bin
+            npm install -g render-cli
       - run:
           name: Deploy to Render
           command: render deploy --service srv-cuf24s5ds78s73fetsdg
