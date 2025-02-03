@@ -42,9 +42,29 @@ jobs:
           command: |
             . venv/bin/activate 
             python manage.py test
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  deploy:
+    docker:
+      - image: cimg/python:3.10.14
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install Render CLI
+          command: curl -fsSL https://render.com/static/cli.sh | sudo bash
+      - run:
+          name: Deploy to Render
+          command: render deploy --service your-service-id
 
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
