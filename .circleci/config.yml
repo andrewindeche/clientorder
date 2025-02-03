@@ -70,7 +70,7 @@ jobs:
           name: Deploy to Render
           command: |
             export PATH=$PATH:~/.npm-global/bin
-            render deploy --service srv-cuf24s5ds78s73fetsdg
+            render deploy --service srv-cuf24s5ds78s73fetsdg --engine liquid
 
 workflows:
   version: 2
