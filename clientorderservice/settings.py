@@ -32,7 +32,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'False'
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','minikube_ip','db']
+ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS=['https://clientorderservice.onrender.com']
 
 AFRICASTALKING_USERNAME = os.getenv('AFRICASTALKING_USERNAME')
 AFRICASTALKING_API_KEY = os.getenv('AFRICASTALKING_API_KEY')
@@ -61,6 +63,8 @@ SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,10 +80,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL')),
-}
-
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -92,7 +92,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_CLIENT_ID': os.environ.get('OAUTH_CLIENT_ID'),
         'OAUTH_CLIENT_SECRET': os.environ.get('OAUTH_CLIENT_SECRET'),
         'OAUTH_PKCE_ENABLED': True,
-        'REDIRECT_URI': 'http://localhost:8000/accounts/google/login/callback/',
+        'REDIRECT_URI': os.environ.get('REDIRECT_URI'),
     }
 }
 
@@ -140,11 +140,12 @@ LOGOUT_REDIRECT_URL = '/accounts/google/login/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+        'DATABASE_URL': os.environ.get('DATABASE_URL'),
         'NAME': os.environ.get('DATABASE_NAME'),
         'USER': os.environ.get('DATABASE_USER'),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
-        'HOST': os.environ.get('DATABASE_HOST','127.0.0.1',),
-        'PORT': os.environ.get('DATABASE_PORT','5432'),
+        'HOST': os.environ.get('DATABASE_HOST'),
+        'PORT': os.environ.get('DATABASE_PORT'),
     }
 }
 
@@ -182,7 +183,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
@@ -194,7 +198,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
-BASE_URL = 'http://localhost:8000'
+BASE_URL = os.environ.get('BASE_URL'),
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_HOST = 'smtp.gmail.com'
 #EMAIL_PORT = 587
