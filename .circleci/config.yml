@@ -68,7 +68,7 @@ jobs:
             npm install -g render-cli
       - run:
           name: Deploy to Render
-          command:  |
+          command: |
             export PATH=$PATH:~/.npm-global/bin
             render deploy --service srv-cuf24s5ds78s73fetsdg
 
