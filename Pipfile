@@ -16,6 +16,7 @@ djangorestframework-simplejwt = "*"
 django-graphql-jwt = "*"
 coverage = "*"
 dj-database-url = "*"
+whitenoise = "*"
 
 [dev-packages]
 
