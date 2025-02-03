@@ -64,11 +64,14 @@ jobs:
           command: |
             mkdir -p ~/.npm-global
             npm config set prefix ~/.npm-global
-            export PATH=$PATH:~/.npm-global/bin
+            echo 'export PATH=$PATH:~/.npm-global/bin' >> ~/.bashrc
+            source ~/.bashrc
             npm install -g render-cli
       - run:
           name: Deploy to Render
-          command: render deploy --service srv-cuf24s5ds78s73fetsdg
+          command:  |
+            source ~/.bashrc
+            render deploy --service srv-cuf24s5ds78s73fetsdg
 
 workflows:
   version: 2
