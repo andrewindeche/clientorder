@@ -58,7 +58,7 @@ jobs:
           command: curl -fsSL https://render.com/static/cli.sh | sudo bash
       - run:
           name: Deploy to Render
-          command: render deploy --service your-service-id
+          command: render deploy --service srv-cuf24s5ds78s73fetsdg
 
 workflows:
   version: 2
