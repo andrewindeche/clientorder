@@ -34,7 +34,7 @@ DEBUG = os.environ.get('DEBUG') == 'False'
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS='https://clientorderservice.onrender.com'
+CSRF_TRUSTED_ORIGINS=['https://clientorderservice.onrender.com']
 
 AFRICASTALKING_USERNAME = os.getenv('AFRICASTALKING_USERNAME')
 AFRICASTALKING_API_KEY = os.getenv('AFRICASTALKING_API_KEY')
