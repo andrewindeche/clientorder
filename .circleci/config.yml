@@ -55,7 +55,7 @@ jobs:
           at: .
       - run:
           name: Install Render CLI
-          command: curl -fsSL https://render.com/static/cli.sh | sudo bash
+          command: npm install -g render-cli
       - run:
           name: Deploy to Render
           command: render deploy --service srv-cuf24s5ds78s73fetsdg
